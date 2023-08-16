@@ -1,6 +1,31 @@
 import streamlit as st
 import os
 from PIL import Image
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+# 로그 파일 설정
+log_dir = "logs"
+os.makedirs(log_dir, exist_ok=True)
+
+# 일자별로 로그 파일을 생성하고 최대 10일치의 로그 파일을 유지합니다.
+file_handler = TimedRotatingFileHandler(f"{log_dir}/app.log", when="midnight", backupCount=10)
+
+# 로그 메시지의 형식을 지정합니다.
+formatter = logging.Formatter("%(asctime)s [%(levelname)s] - %(message)s")
+
+file_handler.setFormatter(formatter)
+file_handler.setLevel(logging.INFO)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+stream_handler.setLevel(logging.INFO)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+logger.info("ai_portal")
 st.set_page_config(layout="wide")
 WIDTH=1100
 HEIGHT = 680
